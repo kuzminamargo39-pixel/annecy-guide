@@ -1,0 +1,469 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annecy Guide - Premium</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: '#0f2e4a',
+                        accent: '#0066cc',
+                        light: '#f5f7fa',
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f2e4a 0%, #1a4b77 100%);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .row-card {
+            transition: all 0.2s ease;
+        }
+
+            .row-card:hover {
+                box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+                transform: translateY(-2px);
+            }
+
+        .image-placeholder {
+            background: repeating-linear-gradient(45deg, #f0f0f0, #f0f0f0 10px, #e8e8e8 10px, #e8e8e8 20px);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const data = {
+            en: {
+                brand: "AnnecyGuide",
+                heroTitle: "Discover Annecy",
+                heroSub: "The ultimate student guide to the Venice of the Alps. Explore the city and beyond.",
+                imageSpace: "[Image]",
+                viewOffer: "Website",
+                nav: [
+                    { id: 'orientation', icon: '🎉', label: 'Welcome Events' },
+                    { id: 'activities', icon: '🚣', label: 'Activities' },
+                    { id: 'trips', icon: '🏔️', label: 'Trips' },
+                    { id: 'food', icon: '🛍️', label: 'Food & Shopping' },
+                    { id: 'housing', icon: '🛏️', label: 'Accommodation' },
+                    { id: 'transport', icon: '🚌', label: 'Transportation' },
+                    { id: 'info', icon: '🛡️', label: 'Important Info' },
+                    { id: 'school', icon: '🎓', label: 'University' }
+                ],
+                orientation: {
+                    title: "Welcome Events & Integration",
+                    intro: "Before the semester starts, there is a week with a beginner's French course from Tuesday to Friday mornings, followed by an action-packed integration weekend with many international students in Courchevel from Friday afternoon to Sunday.",
+                    boost: {
+                        title: "French BOOST Programme",
+                        desc: "A week-long course designed to help you master French, ahead of the official start of the academic year in September.",
+                        details: [
+                            "🗓️ Dates: From Tuesday August to Friday August",
+                            "⏰ Programme: 3-hour French lessons in the morning",
+                            "📊 Levels accepted: All levels, from beginner to advanced",
+                            "📍 Place: Chambery and Annecy",
+                            "💶 Price: €82.50"
+                        ],
+                        regTitle: "How to register?",
+                        register: "Check your E-Mail for a detailed programme. Complete the registration form via the link provided and confirm your place by paying via the relevant payment link (Mastercard, Visa, Revolut, Trade Republic...)."
+                    },
+                    win: {
+                        title: "Weekend Intégration Nature (WIN)",
+                        desc: "Specifically designed to help international students explore the region and make new friends before the start of the academic year. Exclusively reserved for international exchange students starting in September.",
+                        details: [
+                            "📍 Location: Courchevel",
+                            "🗓️ Dates: From the afternoon of Friday to the evening of Sunday (end of August)",
+                            "💶 Price: €100",
+                            "🎒 Programme: Two full days of outdoor activities (tree-top adventure course, via ferrata, hiking), with free time and socialising.",
+                            "✅ Included: On-site accommodation, all meals, activities and equipment, transport to and from the venue (departing from Chambéry, Le Bourget-du-Lac and Annecy)."
+                        ],
+                        regTitle: "How to register and pay?",
+                        register: "Places are limited! Register as soon as possible with the link in your E-Mail, read the attached code of conduct, and pay online (Mastercard, Visa, Revolut, Trade Republic...)."
+                    }
+                },
+                activities: {
+                    waterTitle: "🚣 Water Activities & Rentals",
+                    waterItems: [
+                        { name: "Le Bounty", category: "Paddle Boat, Electric Boat, Wakeboard", location: "600, Promenade Philibert d'Orlye, Menthon-Saint-Bernard", link: "https://www.bountylac.com/tarifs-1198?utm_source", desc: "Wakeboard requires renting a boat with a license.", prices: ["Paddle (2/3/4/5-6 pers): 24€ / 26€ / 29€ / 32€", "Electric (1-2/3-4/5-6 pers): 75€ / 80€ / 85€"], badge: "Popular", img: "a1.jpg" },
+                        { name: "Green Boat", category: "Paddle Boat & Electric Boat", location: "Promenade Jacquet Pâquier, 74000 Annecy", link: "https://www.greenboat-annecy.fr/?utm_source", prices: ["Paddle (2/3-5/5-6 pers): 24€ / 28€ / 32€", "Electric (2-3/4-5/7 pers): 70€ / 75€ / 80€"], img: "a2.jpg" },
+                        { name: "Nautilac", category: "Paddle Boat", location: "Le Champs de Mars, Prom. Jacquet, 74000 Annecy", link: "https://www.nautilac-annecy.com/?utm_source", prices: ["Paddle (2/3-4/5-6 pers): 24€ / 28€ / 32€"], img: "a3.jpg" },
+                        { name: "Instant Outdoor", category: "Canoe, Takoon, SUP", location: "13 Av. de Chavoires, 74940 Annecy", link: "https://www.lokki.rent/loueur/instantoutdoor?c=os", prices: ["Canoe: from 25€", "Takoon: from 30€", "SUP (1/2/XL): from 15€ / 25€ / 60€"], img: "a5.jpg" },
+                        { name: "Stand-Up-Annecy", category: "SUP (Stand Up Paddle)", location: "477 Prom. des Seines, 74320 Sevrier", link: "https://www.stand-up-annecy.com/v3/?utm_source", prices: ["SUP (1/2/XL 4-7 pers): 18€ / 30€ / 50€"], img: "a4.jpg" }
+                    ],
+                    beachesTitle: "🏖️ Best Beaches to Swim",
+                    beaches: [
+                        { name: "Plage Municipale de Talloires", desc: "Take Sibra-bus 20 from town and jump off at 'Ecoles'.", img: "a6.jpg" },
+                        { name: "Plage de la Brune", desc: "Take Sibra-bus 20 and jump off at 'Crozette'.", img: "a7.jpg" },
+                        { name: "Plage d’Albigny", desc: "25min walk from town, right next to the Imperial Casino.", img: "a8.jpg" }
+                    ],
+                    hikingTitle: "🥾 Hiking Trails",
+                    hikingDesc: "Pro Tip: Use the app 'AllTrails' to find the exact spots and navigate easily!",
+                    hiking: [
+                        { name: "Vieux Ville (Old Town)", diff: "Easy", desc: "2.7 km with no climbing. Great for a casual walk.", img: "a9.jpg" },
+                        { name: "Roc de Chère", diff: "Medium", desc: "6.9 km with +250m of climbing. Beautiful forest and lake views.", img: "a10.jpg" },
+                        { name: "Menthon Saint Bernard", diff: "Hard", desc: "24.3 km with +1580m of climbing. For experienced hikers.", img: "a11.jpg" }
+                    ],
+                    otherTitle: "🚲 Biking & 🪂 Paragliding",
+                    otherItems: [
+                        { name: "Véloc' Location de vélo", category: "Bike Rental", location: "7 Rue Président Favre, 74000 Annecy", link: "https://www.xn--location-vlo-annecy-kzb.fr/", desc: "Electric bike is highly recommended if you want to go around the lake 'easier'.", prices: ["Classic Bike (0-2h): 14€", "Electric Bike (0-2h): 26€"], badge: "Must Do", img: "a12.jpg" },
+                        { name: "Paragliding (GetYourGuide)", category: "Extreme Sports", location: "Check GetYourGuide website for meeting points", link: "https://www.getyourguide.com/sv-se/montmin-l214842/annecy-upptack-flygning-med-skarmflygning-over-sjon-t1163381/", desc: "Search for Paragliding on GetYourGuide. Most offer the same experience, but check distance from town.", prices: ["Prices vary by provider"], img: "a13.jpg" }
+                    ],
+                    monumentsTitle: "🏰 Castles & Monuments",
+                    monuments: [
+                        { name: "Château de Menthon-Saint-Bernard", desc: "Stunning fairytale castle overlooking the lake.", img: "a14.jpg" },
+                        { name: "Château de Duingt", desc: "Located on a peninsula, offers iconic views.", img: "a15.jpg" },
+                        { name: "Château d’Annecy", desc: "Historic castle right in the center of the old town.", img: "a16.jpg" }
+                    ]
+                },
+                trips: {
+                    title: "🚆 Day Trips & Excursions",
+                    items: [
+                        { id: "chamonix", name: "Chamonix-Mont-Blanc", desc: "Day activity in Chamonix. Detailed itinerary and tips will be added here soon.", img: "" },
+                        { id: "geneve", name: "Geneva (Switzerland)", desc: "Information about crossing the border, what to see, and transportation will be added here soon.", img: "" },
+                        { id: "lyon", name: "Lyon", desc: "Details about food, architecture, and the best spots in Lyon will be added here soon.", img: "" },
+                        { id: "chambery", name: "Chambéry", desc: "Guide to the historic capital of Savoy will be added here soon.", img: "" }
+                    ]
+                },
+                placeholder: "Detailed information for this section will be added soon."
+            }
+        };
+
+        data.fr = {
+            ...data.en,
+            viewOffer: "Site Web",
+            placeholder: "Les informations détaillées pour cette section seront bientôt ajoutées.",
+            nav: [
+                { id: 'orientation', icon: '🎉', label: 'Événements d’accueil' },
+                { id: 'activities', icon: '🚣', label: 'Activités' },
+                { id: 'trips', icon: '🏔️', label: 'Voyages' },
+                { id: 'food', icon: '🛍️', label: 'Restos & Shopping' },
+                { id: 'housing', icon: '🛏️', label: 'Logement' },
+                { id: 'transport', icon: '🚌', label: 'Transport' },
+                { id: 'info', icon: '🛡️', label: 'Infos Pratiques' },
+                { id: 'school', icon: '🎓', label: 'Université' }
+            ],
+            orientation: {
+                title: "Événements d'accueil & Intégration",
+                intro: "Avant le début du semestre, une semaine de cours de français pour débutants est organisée du mardi au vendredi matin, suivie d'un week-end d'intégration avec de nombreux étudiants internationaux à Courchevel, du vendredi après-midi au dimanche.",
+                boost: {
+                    title: "Programme French BOOST",
+                    desc: "Un cours d'une semaine conçu pour vous aider à maîtriser le français, avant le début officiel de l'année universitaire en septembre.",
+                    details: [
+                        "🗓️ Dates : Du mardi au vendredi (en août)",
+                        "⏰ Programme : 3h de cours de français le matin",
+                        "📊 Niveaux acceptés : Tous niveaux, de débutant à avancé",
+                        "📍 Lieu : Chambéry et Annecy",
+                        "💶 Prix : 82,50 €"
+                    ],
+                    regTitle: "Comment s'inscrire ?",
+                    register: "Consultez votre E-Mail pour le programme détaillé. Remplissez le formulaire d'inscription via le lien fourni et confirmez votre place en payant via le lien de paiement (Mastercard, Visa, Revolut, Trade Republic...)."
+                },
+                win: {
+                    title: "Weekend Intégration Nature (WIN)",
+                    desc: "Spécialement conçu pour aider les étudiants internationaux à explorer la région et se faire des amis avant la rentrée. Exclusivement réservé aux étudiants en échange commençant en septembre.",
+                    details: [
+                        "📍 Lieu : Courchevel",
+                        "🗓️ Dates : Du vendredi après-midi au dimanche soir (fin août)",
+                        "💶 Prix : 100 €",
+                        "🎒 Programme : Deux journées d'activités en plein air (accrobranche, via ferrata, randonnée), temps libre et rencontres.",
+                        "✅ Inclus : Hébergement sur place, tous les repas, activités et équipements, transport aller-retour (depuis Chambéry, Le Bourget-du-Lac et Annecy)."
+                    ],
+                    regTitle: "Comment s'inscrire et payer ?",
+                    register: "Les places sont limitées ! Inscrivez-vous via le lien reçu par E-Mail, lisez le code de conduite en pièce jointe et payez en ligne (Mastercard, Visa, Revolut, Trade Republic...)."
+                }
+            },
+            activities: {
+                waterTitle: "🚣 Activités nautiques & Locations",
+                waterItems: [
+                    { name: "Le Bounty", category: "Pédalo, Bateau électrique, Wakeboard", location: "600, Promenade Philibert d'Orlye", link: "https://www.bountylac.com/tarifs-1198?utm_source", desc: "Le wakeboard nécessite la location d'un bateau avec permis.", prices: ["Pédalo (2/3/4/5-6 pers): 24€ / 26€ / 29€ / 32€", "Électrique (1-2/3-4/5-6 pers): 75€ / 80€ / 85€"], badge: "Populaire", img: "a1.jpg" },
+                    { name: "Green Boat", category: "Pédalo & Bateau électrique", location: "Promenade Jacquet Pâquier, 74000 Annecy", link: "https://www.greenboat-annecy.fr/?utm_source", prices: ["Pédalo (2/3-5/5-6 pers): 24€ / 28€ / 32€", "Électrique (2-3/4-5/7 pers): 70€ / 75€ / 80€"], img: "a2.jpg" },
+                    { name: "Nautilac", category: "Pédalo", location: "Le Champs de Mars", link: "https://www.nautilac-annecy.com/?utm_source", prices: ["Pédalo (2/3-4/5-6 pers): 24€ / 28€ / 32€"], img: "a3.jpg" },
+                    { name: "Instant Outdoor", category: "Canoë, Takoon, SUP", location: "13 Av. de Chavoires", link: "https://www.lokki.rent/loueur/instantoutdoor?c=os", prices: ["Canoë: dès 25€", "Takoon: dès 30€", "SUP (1/2/XL): dès 15€ / 25€ / 60€"], img: "a5.jpg" },
+                    { name: "Stand-Up-Annecy", category: "SUP (Stand Up Paddle)", location: "477 Prom. des Seines, 74320 Sevrier", link: "https://www.stand-up-annecy.com/v3/?utm_source", prices: ["SUP (1/2/XL 4-7 pers): 18€ / 30€ / 50€"], img: "a4.jpg" }
+                ],
+                beachesTitle: "🏖️ Meilleures plages pour se baigner",
+                beaches: [
+                    { name: "Plage Municipale de Talloires", desc: "Prenez le bus Sibra 20 depuis la ville et descendez à 'Ecoles'.", img: "a6.jpg" },
+                    { name: "Plage de la Brune", desc: "Prenez le bus Sibra 20 et descendez à 'Crozette'.", img: "a7.jpg" },
+                    { name: "Plage d’Albigny", desc: "25 min à pied du centre, juste à côté du Casino Impérial.", img: "a8.jpg" }
+                ],
+                hikingTitle: "🥾 Sentiers de randonnée",
+                hikingDesc: "Astuce : Utilisez l'application 'AllTrails' pour trouver les itinéraires exacts !",
+                hiking: [
+                    { name: "Vieille Ville", diff: "Facile", desc: "2.7 km sans dénivelé. Idéal pour une promenade décontractée.", img: "a9.jpg" },
+                    { name: "Roc de Chère", diff: "Moyen", desc: "6.9 km avec +250m de dénivelé. Belles vues sur la forêt et le lac.", img: "a10.jpg" },
+                    { name: "Menthon Saint Bernard", diff: "Difficile", desc: "24.3 km avec +1580m de dénivelé. Pour les randonneurs expérimentés.", img: "a11.jpg" }
+                ],
+                otherTitle: "🚲 Vélo & 🪂 Parapente",
+                otherItems: [
+                    { name: "Véloc' Location de vélo", category: "Location de vélo", location: "7 Rue Président Favre", link: "https://www.xn--location-vlo-annecy-kzb.fr/", desc: "Le vélo électrique est fortement recommandé si vous voulez faire le tour du lac plus facilement.", prices: ["Classique (0-2h): 14€", "Électrique (0-2h): 26€"], badge: "À faire", img: "a12.jpg" },
+                    { name: "Parapente (GetYourGuide)", category: "Sports extrêmes", location: "Vérifiez le site GetYourGuide pour les points de rendez-vous", link: "https://www.getyourguide.com/sv-se/montmin-l214842/annecy-upptack-flygning-med-skarmflygning-over-sjon-t1163381/", desc: "Recherchez Parapente sur GetYourGuide. La plupart offrent la même expérience, mais vérifiez la distance depuis la ville.", prices: ["Prix variables selon le prestataire"], img: "a13.jpg" }
+                ],
+                monumentsTitle: "🏰 Châteaux & Monuments",
+                monuments: [
+                    { name: "Château de Menthon-Saint-Bernard", desc: "Superbe château de conte de fées surplombant le lac.", img: "a14.jpg" },
+                    { name: "Château de Duingt", desc: "Situé sur une presqu'île, offre des vues emblématiques.", img: "a15.jpg" },
+                    { name: "Château d’Annecy", desc: "Château historique en plein centre de la vieille ville.", img: "a16.jpg" }
+                ]
+            },
+            trips: {
+                title: "🚆 Excursions d'une journée",
+                items: [
+                    { id: "chamonix", name: "Chamonix-Mont-Blanc", desc: "Activité d'une journée à Chamonix. L'itinéraire détaillé sera ajouté bientôt.", img: "" },
+                    { id: "geneve", name: "Genève (Suisse)", desc: "Informations sur la frontière et les transports seront ajoutées bientôt.", img: "" },
+                    { id: "lyon", name: "Lyon", desc: "Détails sur la gastronomie et l'architecture seront ajoutés bientôt.", img: "" },
+                    { id: "chambery", name: "Chambéry", desc: "Guide de la capitale historique de la Savoie sera ajouté bientôt.", img: "" }
+                ]
+            }
+        };
+
+        function App() {
+            const [lang, setLang] = useState('en');
+            const [activeTab, setActiveTab] = useState('orientation');
+            const t = data[lang];
+
+            const RowItem = ({ item }) => (
+                <div className="row-card bg-white rounded-xl border border-gray-200 p-4 mb-4 flex flex-col md:flex-row items-start md:items-center gap-6">
+                    <div className="w-full md:w-40 h-32 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0 relative overflow-hidden">
+                        {item.img ? (
+                            <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                        ) : (
+                            <span className="text-gray-400 text-xs font-semibold px-2 text-center">{t.imageSpace}</span>
+                        )}
+                        {item.badge && (
+                            <span className="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">
+                                {item.badge}
+                            </span>
+                        )}
+                    </div>
+                    <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-xl font-bold text-gray-900">{item.name}</h3>
+                        </div>
+                        <p className="text-accent font-medium text-sm mb-2">{item.category}</p>
+                        <p className="text-gray-600 text-sm mb-1">📍 {item.location}</p>
+                        {item.desc && <p className="text-gray-500 text-xs mt-2 italic">{item.desc}</p>}
+                    </div>
+                    <div className="w-full md:w-72 border-t md:border-t-0 md:border-l border-gray-100 pt-4 md:pt-0 md:pl-6 flex flex-col justify-center">
+                        <div className="mb-3 space-y-1">
+                            {item.prices.map((p, i) => <div key={i} className="text-sm font-semibold text-gray-800">{p}</div>)}
+                        </div>
+                        {item.link && (
+                            <a href={item.link} target="_blank" rel="noreferrer" className="w-full bg-accent hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg transition text-sm text-center block">
+                                {t.viewOffer} ❯
+                            </a>
+                        )}
+                    </div>
+                </div>
+            );
+
+            const GridCard = ({ title, items, isHiking = false }) => (
+                <div className="mb-12">
+                    <h2 className="text-2xl font-bold text-brand mb-6">{title}</h2>
+                    {isHiking && <div className="bg-blue-50 text-accent font-semibold p-3 rounded-lg mb-6 border border-blue-100">📱 {t.activities.hikingDesc}</div>}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {items.map((item, i) => (
+                            <div key={i} className="bg-white rounded-xl p-5 border border-gray-200 row-card flex flex-col">
+                                <div className="w-full h-40 rounded-lg bg-gray-100 flex items-center justify-center mb-4 relative overflow-hidden">
+                                    {item.img ? (
+                                        <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <span className="text-gray-400 text-xs">{t.imageSpace}</span>
+                                    )}
+                                    {item.diff && (
+                                        <span className={`absolute top-2 right-2 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide ${item.diff === 'Easy' ? 'bg-green-500' : item.diff === 'Medium' ? 'bg-yellow-500' : 'bg-red-500'}`}>
+                                            {item.diff}
+                                        </span>
+                                    )}
+                                </div>
+                                <h3 className="font-bold text-lg mb-2 text-brand">{item.name}</h3>
+                                <p className="text-gray-600 text-sm">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            const renderContent = () => {
+                if (activeTab === 'orientation') {
+                    return (
+                        <div className="max-w-5xl mx-auto pb-20 mt-8">
+                            <h2 className="text-3xl font-black text-brand mb-4 border-b pb-4">{t.orientation.title}</h2>
+                            <p className="text-gray-600 text-lg mb-8 leading-relaxed">{t.orientation.intro}</p>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="bg-white rounded-2xl p-8 border border-blue-100 shadow-sm relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-1.5 rounded-bl-xl text-sm font-bold shadow-md">August</div>
+                                    <h3 className="text-2xl font-bold text-brand mb-3">{t.orientation.boost.title}</h3>
+                                    <p className="text-gray-600 mb-6">{t.orientation.boost.desc}</p>
+                                    <ul className="space-y-3 mb-8">
+                                        {t.orientation.boost.details.map((detail, i) => (
+                                            <li key={i} className="text-sm text-gray-700 font-medium">{detail}</li>
+                                        ))}
+                                    </ul>
+                                    <div className="bg-blue-50/50 p-5 rounded-xl border border-blue-100">
+                                        <h4 className="font-bold text-brand mb-2">{t.orientation.boost.regTitle}</h4>
+                                        <p className="text-sm text-gray-700 leading-relaxed">{t.orientation.boost.register}</p>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white rounded-2xl p-8 border border-green-100 shadow-sm relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 bg-green-500 text-white px-4 py-1.5 rounded-bl-xl text-sm font-bold shadow-md">End of August</div>
+                                    <h3 className="text-2xl font-bold text-brand mb-3">{t.orientation.win.title}</h3>
+                                    <p className="text-gray-600 mb-6">{t.orientation.win.desc}</p>
+                                    <ul className="space-y-3 mb-8">
+                                        {t.orientation.win.details.map((detail, i) => (
+                                            <li key={i} className="text-sm text-gray-700 font-medium">{detail}</li>
+                                        ))}
+                                    </ul>
+                                    <div className="bg-green-50/50 p-5 rounded-xl border border-green-100">
+                                        <h4 className="font-bold text-brand mb-2">{t.orientation.win.regTitle}</h4>
+                                        <p className="text-sm text-gray-700 leading-relaxed">{t.orientation.win.register}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    );
+                }
+
+                if (activeTab === 'activities') {
+                    return (
+                        <div className="max-w-5xl mx-auto pb-20 mt-8">
+                            <h2 className="text-2xl font-bold text-brand mb-6">{t.activities.waterTitle}</h2>
+                            <div className="mb-12">
+                                {t.activities.waterItems.map((item, i) => <RowItem key={i} item={item} />)}
+                            </div>
+                            <GridCard title={t.activities.beachesTitle} items={t.activities.beaches} />
+                            <GridCard title={t.activities.hikingTitle} items={t.activities.hiking} isHiking={true} />
+                            <h2 className="text-2xl font-bold text-brand mb-6">{t.activities.otherTitle}</h2>
+                            <div className="mb-12">
+                                {t.activities.otherItems.map((item, i) => <RowItem key={i} item={item} />)}
+                            </div>
+                            <GridCard title={t.activities.monumentsTitle} items={t.activities.monuments} />
+                        </div>
+                    );
+                }
+
+                if (activeTab === 'trips') {
+                    return (
+                        <div className="max-w-5xl mx-auto pb-20 mt-8">
+                            <h2 className="text-3xl font-black text-brand mb-8 border-b pb-4">{t.trips.title}</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                {t.trips.items.map((trip, i) => (
+                                    <div key={i} className="bg-white rounded-2xl p-6 border border-gray-200 row-card flex flex-col shadow-sm">
+                                        <div className="w-full h-48 rounded-xl bg-gray-100 flex items-center justify-center mb-6 relative overflow-hidden">
+                                            {trip.img ? (
+                                                <img src={trip.img} alt={trip.name} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <span className="text-gray-400 text-sm font-semibold">{t.imageSpace} - {trip.name}</span>
+                                            )}
+                                        </div>
+                                        <h3 className="font-bold text-2xl mb-3 text-brand">{trip.name}</h3>
+                                        <p className="text-gray-600 text-base leading-relaxed mb-6 flex-grow">{trip.desc}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    );
+                }
+
+                return (
+                    <div className="max-w-3xl mx-auto mt-10 p-12 bg-white rounded-2xl border border-dashed border-gray-300 text-center">
+                        <div className="text-4xl mb-4">🚧</div>
+                        <h3 className="text-xl font-bold text-gray-800 mb-2">{t.nav.find(n => n.id === activeTab)?.label}</h3>
+                        <p className="text-gray-500">{t.placeholder}</p>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="min-h-screen">
+                    <header className="bg-white px-6 py-4 flex justify-between items-center shadow-sm sticky top-0 z-50">
+                        <div className="text-2xl font-black text-brand tracking-tighter">
+                            {t.brand}<span className="text-accent">.</span>
+                        </div>
+                        <div className="flex bg-gray-100 p-1 rounded-lg">
+                            <button onClick={() => setLang('en')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${lang === 'en' ? 'bg-white shadow text-brand' : 'text-gray-500 hover:text-gray-800'}`}>EN</button>
+                            <button onClick={() => setLang('fr')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition ${lang === 'fr' ? 'bg-white shadow text-brand' : 'text-gray-500 hover:text-gray-800'}`}>FR</button>
+                        </div>
+                    </header>
+
+                    <div className="relative hero-gradient w-full h-[350px] flex flex-col items-center justify-center px-4 text-center overflow-hidden">
+
+                        {/* ФОНОВЕ ЗОБРАЖЕННЯ ТУТ: Заміни "background.jpg" на назву свого файлу для головного банеру */}
+                        <img
+                            id="main-background"
+                            src="bg.jpg"
+                            className="absolute inset-0 w-full h-full object-cover opacity-50 mix-blend-overlay"
+                            alt="Annecy Background"
+                        />
+
+                        <div className="relative z-10">
+                            <h1 className="text-4xl md:text-6xl font-extrabold text-white mb-4 drop-shadow-lg">{t.heroTitle}</h1>
+                            <p className="text-lg text-blue-50 max-w-2xl mx-auto drop-shadow-md">{t.heroSub}</p>
+                        </div>
+                    </div>
+
+                    <div className="max-w-6xl mx-auto px-4 relative z-20 -mt-16 mb-12">
+                        <div className="bg-white rounded-2xl shadow-lg p-6 flex gap-4 overflow-x-auto hide-scrollbar justify-start md:justify-center border border-gray-100">
+                            {t.nav.map(navItem => (
+                                <button
+                                    key={navItem.id}
+                                    onClick={() => setActiveTab(navItem.id)}
+                                    className="flex flex-col items-center min-w-[100px] gap-3 group"
+                                >
+                                    <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-sm transition-all duration-300 ${activeTab === navItem.id ? 'bg-accent text-white scale-110 shadow-blue-500/30' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 hover:scale-105'}`}>
+                                        {navItem.icon}
+                                    </div>
+                                    <span className={`text-sm font-semibold transition-colors ${activeTab === navItem.id ? 'text-accent' : 'text-gray-600 group-hover:text-gray-900'}`}>
+                                        {navItem.label}
+                                    </span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <main className="px-4">
+                        {renderContent()}
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
